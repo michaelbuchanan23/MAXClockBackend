@@ -56,13 +56,13 @@ namespace MAXClockAPI.Controllers
 			Student student = db.Students.Find(timestamp.StudentId);
 
 			DateTime Time = DateTime.Now;
-			if (student.ChekedIn == true) {
+			if (student.CheckedIn == true) {
 			timestamp.TimeOut = Time;
 			} else {
 			timestamp.TimeIn = Time;
 			}
 
-			student.ChekedIn = !student.ChekedIn;
+			student.CheckedIn = !student.CheckedIn;
 
 			db.Entry(timestamp).State = EntityState.Added;
 			db.Entry(student).State = EntityState.Modified;

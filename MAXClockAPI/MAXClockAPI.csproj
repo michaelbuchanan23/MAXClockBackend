@@ -229,6 +229,10 @@
     <Compile Include="Migrations\201808061643319_added CORS.Designer.cs">
       <DependentUpon>201808061643319_added CORS.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808061844017_spelling fixed on student.cs" />
+    <Compile Include="Migrations\201808061844017_spelling fixed on student.Designer.cs">
+      <DependentUpon>201808061844017_spelling fixed on student.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Class.cs" />
     <Compile Include="Models\Instructor.cs" />
@@ -346,6 +350,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808061643319_added CORS.resx">
       <DependentUpon>201808061643319_added CORS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808061844017_spelling fixed on student.resx">
+      <DependentUpon>201808061844017_spelling fixed on student.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
