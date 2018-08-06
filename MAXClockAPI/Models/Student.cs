@@ -17,7 +17,7 @@ namespace MAXClockAPI.Models {
 
 		public int PIN { get; set; }
 
-		public bool ChekedIn { get; set; }
+		public bool CheckedIn { get; set; }
 
 	}
 }
