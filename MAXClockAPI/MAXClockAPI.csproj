@@ -237,6 +237,7 @@
     <Compile Include="Models\Timestamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\JSONResponse.cs" />
+    <Compile Include="Utilities\StudentClasses.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

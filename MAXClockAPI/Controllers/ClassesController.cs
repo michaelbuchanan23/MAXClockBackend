@@ -51,7 +51,20 @@ namespace MAXClockAPI.Controllers
 		[ActionName("Get")]
 		public JSONResponse GetClass(int id) {
 
-			return new JSONResponse();
+			Class @class = db.Classes.Find(id);
+			if (@class == null) {
+				return new JSONResponse() {
+					Action = "Get Class",
+					Data = null,
+					Error = "Class Not Found"
+				};
+			}
+
+			return new JSONResponse() {
+				Action = "",
+				Data = @class,
+				Error = ""
+			};
 		}
 
 		[HttpPost]
@@ -59,6 +72,24 @@ namespace MAXClockAPI.Controllers
 		public JSONResponse CreateClass(Class @class) {
 
 			return new JSONResponse();
+		}
+
+		[HttpPost]
+		[ActionName("AddStudent")]
+		public JSONResponse AddStudent(StudentClasses studentclasses) {
+
+			Class @Class = db.Classes.Find(studentclasses.ClassId);
+			Student Student = db.Students.Find(studentclasses.StudentId);
+
+			@Class.Students.Add(Student);
+			db.Entry(@Class).State = EntityState.Modified;
+			db.SaveChanges();
+
+			return new JSONResponse() {
+				Action = "Student Added",
+				Data = null,
+				Error = "N/A"
+			};
 		}
 
 		[HttpPost]
