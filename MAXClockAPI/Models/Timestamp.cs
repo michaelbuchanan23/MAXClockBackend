@@ -12,8 +12,6 @@ namespace MAXClockAPI.Models {
 		public int StudentId { get; set; }
 		public int ClassId { get; set; }
 
-		public int PIN { get; set; }
-
 		public DateTime? TimeIn { get; set; }
 		public DateTime? TimeOut { get; set; }
 	}
