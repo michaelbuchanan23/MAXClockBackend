@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using System.Web.Http.Description;
 using MAXClockAPI.Models;
 using MAXClockAPI.Utilities;
 
@@ -21,56 +15,143 @@ namespace MAXClockAPI.Controllers
 
 		[HttpGet]
 		[ActionName("List")]
-		public JSONResponse ListClasses() {
+		public JSONResponse ListTimestamps() {
 
+			//return Timestamps List JSON
 			return new JSONResponse() {
 				Data = db.Timestamps.ToList()
 			};
 		}
 
-		[HttpGet]
-		[ActionName("Get")]
-		public JSONResponse GetClass(int id) {
+		[HttpPost]
+		[ActionName("Edit")]
+		public JSONResponse EditTimestamp(Timestamp timestamp) {
 
-			return new JSONResponse();
+			//validate Timestamp exists
+			if(db.Timestamps.Find(timestamp.Id) == null) {
+				return new JSONResponse() {
+					Action = "Failed to Edit Timestamp",
+					Data = null,
+					Error = "No Timestamp Found"
+				};
+			}
+
+			//validate Student exists
+			if (db.Students.Find(timestamp.StudentId) == null) {
+				return new JSONResponse() {
+					Action = "Failed to Edit Timestamp",
+					Data = null,
+					Error = "No Student Found"
+				};
+			}
+
+			//validate Class exists
+			if (db.Classes.Find(timestamp.ClassId) == null) {
+				return new JSONResponse() {
+					Action = "Failed to Edit Timestamp",
+					Data = null,
+					Error = "No Class Found"
+				};
+			}
+
+			//validate Timestamp dates format
+			DateTime? Time = new DateTime();
+			try {
+				Time = timestamp.TimeIn;
+				Time = timestamp.TimeOut;
+			} catch (Exception e) {
+				return new JSONResponse() {
+					Action = "Failed to Edit Timestamp",
+					Data = e.Message,
+					Error = "Timestamp DateTime Format Error"
+				};
+			}
+
+			//validated Timestamp model
+			Timestamp Timestamp = new Timestamp() {
+				Id = timestamp.Id,
+				TimeIn = timestamp.TimeIn,
+				TimeOut = timestamp.TimeOut,
+				StudentId = timestamp.StudentId,
+				ClassId = timestamp.ClassId
+			};
+
+			//modify timestamp in DB
+			db.Entry(Timestamp).State = EntityState.Modified;
+			db.SaveChanges();
+
+			//return Timestamp JSON
+			return new JSONResponse() {
+				Action = "Timestamp Edited",
+				Data = Timestamp,
+				Error = "N/A"
+			};
 		}
 
 		[HttpPost]
 		[ActionName("Create")]
-		public JSONResponse CreateClass(Timestamp timestamp) {
+		public JSONResponse CreateTimestamp(Timestamp timestamp) {
 
-			return new JSONResponse();
+			//validate Student exists
+			if(db.Students.Find(timestamp.StudentId) == null) {
+				return new JSONResponse() {
+					Action = "Failed to Create Timestamp",
+					Data = null,
+					Error = "No Student Found"
+				};
+			}
+
+			//validate Class exists
+			if(db.Classes.Find(timestamp.ClassId) == null) {
+				return new JSONResponse() {
+					Action = "Failed to Create Timestamp",
+					Data = null,
+					Error = "No Class Found"
+				};
+			}
+
+			//validate Timestamp dates format
+			DateTime? Time = new DateTime();
+			try {
+				Time = timestamp.TimeIn;
+				Time = timestamp.TimeOut;
+			}catch (Exception e) {
+				return new JSONResponse() {
+					Action = "Failed to Create Timestamp",
+					Data = e.Message,
+					Error = "Timestamp DateTime Format Error"
+				};
+			}
+
+			//validated Timestamp model
+			Timestamp Timestamp = new Timestamp();
+			Timestamp.TimeIn = timestamp.TimeIn;
+			Timestamp.TimeOut = timestamp.TimeOut;
+			Timestamp.StudentId = timestamp.StudentId;
+			Timestamp.ClassId = timestamp.ClassId;
+
+			//Add timestamp to DB
+			db.Entry(Timestamp).State = EntityState.Added;
+			db.SaveChanges();
+
+			//return Timestamp JSON
+			return new JSONResponse() {
+				Action = "Timestamp Created",
+				Data = Timestamp,
+				Error = "N/A"
+			};
 		}
 
 		[HttpPost]
 		[ActionName("Delete")]
-		public JSONResponse DeleteClass(int id) {
+		public JSONResponse DeleteTimestamp(int id) {
 
-			return new JSONResponse();
-		}
-
-		[HttpPost]
-		[ActionName("Toggle")]
-		public JSONResponse TimeIn(Timestamp timestamp) {
-
-			Student student = db.Students.Find(timestamp.StudentId);
-
-			DateTime Time = DateTime.Now;
-			if (student.CheckedIn == true) {
-			timestamp.TimeOut = Time;
-			} else {
-			timestamp.TimeIn = Time;
-			}
-
-			student.CheckedIn = !student.CheckedIn;
-
-			db.Entry(timestamp).State = EntityState.Added;
-			db.Entry(student).State = EntityState.Modified;
-			db.SaveChanges();
+			//find and delete Timestamp
+			db.Entry(db.Timestamps.Find(id)).State = EntityState.Deleted;
 			return new JSONResponse() {
-				Action = "Student Clocked",
-				Data = student,
-				Error = "N/A"
+				Action = "Timestamp Deleted",
+				Data = null,
+				Error = null
 			};
 		}
 

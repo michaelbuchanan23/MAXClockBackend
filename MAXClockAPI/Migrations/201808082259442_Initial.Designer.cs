@@ -7,13 +7,13 @@ namespace MAXClockAPI.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class spellingfixedonstudent : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(spellingfixedonstudent));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201808061844017_spelling fixed on student"; }
+            get { return "201808082259442_Initial"; }
         }
         
         string IMigrationMetadata.Source

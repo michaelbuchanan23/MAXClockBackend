@@ -201,37 +201,21 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201808061502569_init.cs" />
-    <Compile Include="Migrations\201808061502569_init.Designer.cs">
-      <DependentUpon>201808061502569_init.cs</DependentUpon>
+    <Compile Include="Migrations\201808082259442_Initial.cs" />
+    <Compile Include="Migrations\201808082259442_Initial.Designer.cs">
+      <DependentUpon>201808082259442_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201808061514236_changed class model.cs" />
-    <Compile Include="Migrations\201808061514236_changed class model.Designer.cs">
-      <DependentUpon>201808061514236_changed class model.cs</DependentUpon>
+    <Compile Include="Migrations\201808082301147_Update Student Model.cs" />
+    <Compile Include="Migrations\201808082301147_Update Student Model.Designer.cs">
+      <DependentUpon>201808082301147_Update Student Model.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201808061517371_changed student model.cs" />
-    <Compile Include="Migrations\201808061517371_changed student model.Designer.cs">
-      <DependentUpon>201808061517371_changed student model.cs</DependentUpon>
+    <Compile Include="Migrations\201808090207148_Update Timestamp Model.cs" />
+    <Compile Include="Migrations\201808090207148_Update Timestamp Model.Designer.cs">
+      <DependentUpon>201808090207148_Update Timestamp Model.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201808061530021_changed models.cs" />
-    <Compile Include="Migrations\201808061530021_changed models.Designer.cs">
-      <DependentUpon>201808061530021_changed models.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201808061616069_changed timestamps.cs" />
-    <Compile Include="Migrations\201808061616069_changed timestamps.Designer.cs">
-      <DependentUpon>201808061616069_changed timestamps.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201808061621336_added active to class model.cs" />
-    <Compile Include="Migrations\201808061621336_added active to class model.Designer.cs">
-      <DependentUpon>201808061621336_added active to class model.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201808061643319_added CORS.cs" />
-    <Compile Include="Migrations\201808061643319_added CORS.Designer.cs">
-      <DependentUpon>201808061643319_added CORS.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201808061844017_spelling fixed on student.cs" />
-    <Compile Include="Migrations\201808061844017_spelling fixed on student.Designer.cs">
-      <DependentUpon>201808061844017_spelling fixed on student.cs</DependentUpon>
+    <Compile Include="Migrations\201808090314256_Update Timestamp Model PIN.cs" />
+    <Compile Include="Migrations\201808090314256_Update Timestamp Model PIN.Designer.cs">
+      <DependentUpon>201808090314256_Update Timestamp Model PIN.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Class.cs" />
@@ -282,7 +266,9 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -330,29 +316,17 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201808061502569_init.resx">
-      <DependentUpon>201808061502569_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808082259442_Initial.resx">
+      <DependentUpon>201808082259442_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808061514236_changed class model.resx">
-      <DependentUpon>201808061514236_changed class model.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808082301147_Update Student Model.resx">
+      <DependentUpon>201808082301147_Update Student Model.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808061517371_changed student model.resx">
-      <DependentUpon>201808061517371_changed student model.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808090207148_Update Timestamp Model.resx">
+      <DependentUpon>201808090207148_Update Timestamp Model.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808061530021_changed models.resx">
-      <DependentUpon>201808061530021_changed models.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808061616069_changed timestamps.resx">
-      <DependentUpon>201808061616069_changed timestamps.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808061621336_added active to class model.resx">
-      <DependentUpon>201808061621336_added active to class model.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808061643319_added CORS.resx">
-      <DependentUpon>201808061643319_added CORS.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808061844017_spelling fixed on student.resx">
-      <DependentUpon>201808061844017_spelling fixed on student.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808090314256_Update Timestamp Model PIN.resx">
+      <DependentUpon>201808090314256_Update Timestamp Model PIN.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

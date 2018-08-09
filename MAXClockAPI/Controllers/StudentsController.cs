@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using System.Web.Http.Description;
 using MAXClockAPI.Models;
 using MAXClockAPI.Utilities;
 
@@ -21,30 +17,191 @@ namespace MAXClockAPI.Controllers
 
 		[HttpGet]
 		[ActionName("List")]
-		public JSONResponse ListClasses() {
+		public JSONResponse ListStudents() {
 
-			return new JSONResponse();
+			//find all Students
+			List<Student> Students = db.Students.ToList();
+
+			//return Student List in JSON
+			return new JSONResponse() {
+				Action = "Listing all Students",
+				Data = Students,
+				Error = "N/A"
+			};
 		}
 
 		[HttpGet]
 		[ActionName("Get")]
-		public JSONResponse GetClass(int id) {
+		public JSONResponse GetStudent(int id) {
 
-			return new JSONResponse();
+			//find Student by Id
+			Student Student = db.Students.Find(id);
+
+			//return Student in JSON
+			return new JSONResponse() {
+				Action = "Student Found",
+				Data = Student,
+				Error = "N/A"
+			};
+		}
+
+		[HttpGet]
+		[ActionName("GetStamps")]
+		public JSONResponse GetStudentStamps(int id) {
+
+			//find all Timestamps with Student Id
+			List<Timestamp> Timestamps = db.Timestamps.Where(stamp => stamp.StudentId == id).ToList();
+
+			//return JSON with Timestamp array
+			return new JSONResponse() {
+				Action = "All Student Timestamps",
+				Data = Timestamps,
+				Error = "N/A"
+			};
+		}
+
+		[HttpGet]
+		[ActionName("GetClassStamps")]
+		public JSONResponse GetClassStamps(Timestamp timestamp) {
+
+			//find all Timestamps with Student Id and Class Id
+			List<Timestamp> Timestamps = StudentStamps(timestamp.StudentId, timestamp.ClassId);
+
+			//return JSON with Timestamp Array
+			return new JSONResponse() {
+				Action = "All Student Timestamps For Class",
+				Data = Timestamps,
+				Error = "N/A"
+			};
 		}
 
 		[HttpPost]
 		[ActionName("Create")]
-		public JSONResponse CreateClass(Student student) {
+		public JSONResponse CreateStudent(Student student) {
 
-			return new JSONResponse();
+			//create new Student
+			Student Student = new Student() {
+				Firstname = student.Firstname,
+				Lastname = student.Lastname,
+				PIN = student.PIN,
+				Status = false,
+				Timestamp = new Timestamp()
+			};
+
+			//add Student to DB
+			db.Entry(Student).State = EntityState.Added;
+
+			//sanitize Student PIN
+			Student.PIN = 0;
+
+			//return action confirmation
+			return new JSONResponse() {
+				Action = "Student Created",
+				Data = Student,
+				Error = "N/A"
+			};
 		}
 
 		[HttpPost]
 		[ActionName("Delete")]
-		public JSONResponse DeleteClass(int id) {
+		public JSONResponse DeleteStudent(int id) {
 
-			return new JSONResponse();
+			//find Student
+			Student Student = db.Students.Find(id);
+
+			//delete Student
+			db.Entry(Student).State = EntityState.Deleted;
+			db.SaveChanges();
+
+			//return action confirmation
+			return new JSONResponse() {
+				Action = "Student Deleted",
+				Data = null,
+				Error = "N/A"
+			};
+		}
+
+		[HttpPost]
+		[ActionName("Stamp")]
+		public JSONResponse Stamp(Timestamp timestamp) {
+
+			//get Student
+			Student Student = db.Students.Find(timestamp.StudentId);
+
+			if (timestamp.PIN != Student.PIN) {
+				return new JSONResponse() {
+					Action = "Failed to Stamp",
+					Data = null,
+					Error = $"Incorrect PIN"
+				};
+			}
+			//get current Timestamp
+			Timestamp Stamp = Student.Timestamp;
+
+			//check status
+			if (Student.Status) {
+				//current Timestamp clocked in
+
+				//toggle Student status
+				Student.Status = !Student.Status;
+
+				//update Student Timestamp / clock out /create new Timestamp
+				Stamp.TimeOut = DateTime.Now;
+				Student.Timestamp = new Timestamp() {
+					StudentId = Student.Id,
+					ClassId = timestamp.ClassId
+				};
+
+				//update Student in DB
+				db.Entry(Student).State = EntityState.Modified;
+				db.SaveChanges();
+
+				//update Timestamp in DB
+				db.Entry(Stamp).State = EntityState.Modified;
+				db.SaveChanges();
+
+				//sanitize Student PIN
+				Student.PIN = 0;
+
+				//update Timeout for JSON
+				Student.Timestamp.TimeOut = Stamp.TimeOut;
+
+				//return Student in JSON
+				return new JSONResponse() {
+					Action = "Student Stamped Out",
+					Data = Student,
+					Error = "N/A"
+				};
+			}
+			//current Timestamp clocked out
+
+			//update Student Status
+			Student.Status = !Student.Status;
+
+			//update Student Timestamp
+			Student.Timestamp.TimeIn = DateTime.Now;
+
+			//update Student in DB
+			db.Entry(Student).State = EntityState.Modified;
+			db.SaveChanges();
+
+			//sanitize Student PIN
+			Student.PIN = 0;
+
+			//return Student in JSON
+			return new JSONResponse() {
+				Action = "Student Stamped In",
+				Data = Student,
+				Error = "N/A"
+			};
+		}
+
+		public List<Timestamp> StudentStamps(int studentid, int classid) {
+
+			//find all Timestamps for student in class
+			return db.Timestamps.Where(
+				stamp => studentid == stamp.StudentId
+				&& classid == stamp.ClassId).ToList();
 		}
 	}
 }

@@ -9,15 +9,15 @@ namespace MAXClockAPI.Models {
 
 		public int Id { get; set; }
 
-		[JsonIgnore]
-		public virtual List<Class> Classes { get; set; }
-
 		public string Firstname { get; set; }
 		public string Lastname { get; set; }
 
+		[JsonIgnore]
 		public int PIN { get; set; }
 
-		public bool CheckedIn { get; set; }
+		public bool Status { get; set; } = false;
+
+		public virtual Timestamp Timestamp { get; set; }
 
 	}
 }

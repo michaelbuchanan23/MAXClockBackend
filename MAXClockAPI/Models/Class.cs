@@ -11,7 +11,10 @@ namespace MAXClockAPI.Models {
 		public string Title { get; set; }
 		public string Description { get; set; }
 		public bool Active { get; set; }
-	
+
+		public DateTime? StartDate { get; set; }
+		public DateTime? EndDate { get; set; }
+
 		public virtual Instructor Instructor { get; set; }
 
 		public virtual List<Student> Students { get; set; }

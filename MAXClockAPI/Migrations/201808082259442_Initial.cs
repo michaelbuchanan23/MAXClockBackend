@@ -3,7 +3,7 @@ namespace MAXClockAPI.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class init : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -14,6 +14,9 @@ namespace MAXClockAPI.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         Title = c.String(),
                         Description = c.String(),
+                        Active = c.Boolean(nullable: false),
+                        StartDate = c.DateTime(),
+                        EndDate = c.DateTime(),
                         Instructor_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -39,9 +42,15 @@ namespace MAXClockAPI.Migrations
                         Firstname = c.String(),
                         Lastname = c.String(),
                         PIN = c.Int(nullable: false),
-                        CeckedIn = c.Boolean(nullable: false),
+                        Status = c.Boolean(nullable: false),
+                        Timestamp_Id = c.Int(),
+                        Class_Id = c.Int(),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Timestamps", t => t.Timestamp_Id)
+                .ForeignKey("dbo.Classes", t => t.Class_Id)
+                .Index(t => t.Timestamp_Id)
+                .Index(t => t.Class_Id);
             
             CreateTable(
                 "dbo.Timestamps",
@@ -50,8 +59,9 @@ namespace MAXClockAPI.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         StudentId = c.Int(nullable: false),
                         ClassId = c.Int(nullable: false),
-                        TimeIn = c.DateTime(nullable: false),
-                        TimeOut = c.DateTime(nullable: false),
+                        PIN = c.Int(nullable: false),
+                        TimeIn = c.DateTime(),
+                        TimeOut = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -59,7 +69,11 @@ namespace MAXClockAPI.Migrations
         
         public override void Down()
         {
+            DropForeignKey("dbo.Students", "Class_Id", "dbo.Classes");
+            DropForeignKey("dbo.Students", "Timestamp_Id", "dbo.Timestamps");
             DropForeignKey("dbo.Classes", "Instructor_Id", "dbo.Instructors");
+            DropIndex("dbo.Students", new[] { "Class_Id" });
+            DropIndex("dbo.Students", new[] { "Timestamp_Id" });
             DropIndex("dbo.Classes", new[] { "Instructor_Id" });
             DropTable("dbo.Timestamps");
             DropTable("dbo.Students");

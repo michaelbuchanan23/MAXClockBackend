@@ -7,13 +7,13 @@ namespace MAXClockAPI.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class init : IMigrationMetadata
+    public sealed partial class UpdateTimestampModelPIN : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(init));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateTimestampModelPIN));
         
         string IMigrationMetadata.Id
         {
-            get { return "201808061502569_init"; }
+            get { return "201808090314256_Update Timestamp Model PIN"; }
         }
         
         string IMigrationMetadata.Source

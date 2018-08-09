@@ -7,13 +7,13 @@ namespace MAXClockAPI.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class changedmodels : IMigrationMetadata
+    public sealed partial class UpdateTimestampModel : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(changedmodels));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateTimestampModel));
         
         string IMigrationMetadata.Id
         {
-            get { return "201808061530021_changed models"; }
+            get { return "201808090207148_Update Timestamp Model"; }
         }
         
         string IMigrationMetadata.Source
