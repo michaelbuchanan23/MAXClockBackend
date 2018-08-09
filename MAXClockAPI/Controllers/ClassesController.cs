@@ -28,6 +28,9 @@ namespace MAXClockAPI.Controllers
 			//add previous data to the JSON for initial stamp
 			foreach (Class Class in Classes) {
 				foreach (Student Student in Class.Students) {
+					//sanatize Student PINs
+					Student.PIN = 0;
+
 					//if the student is clocked out
 					if (!Student.Status) {
 						//find the last clock out stamp
@@ -41,6 +44,7 @@ namespace MAXClockAPI.Controllers
 				}
 			}
 
+			//return Class JSON
 			return new JSONResponse() {
 				Action = "Listing All Classes",
 				Data = Classes,
@@ -52,13 +56,26 @@ namespace MAXClockAPI.Controllers
 		[ActionName("Active")]
 		public JSONResponse ActiveClasses() {
 			List<Class> Classes = db.Classes.Where(cls => cls.Active == true).ToList();
+			//add previous data to the JSON for initial stamp
 			foreach (Class Class in Classes) {
 				foreach (Student Student in Class.Students) {
-					List<Timestamp> Stamps = db.Timestamps.Where(stamp => stamp.StudentId == Student.Id).ToList();
-					Student.Timestamp.TimeOut = Stamps[Stamps.Count - 1].TimeOut;
+					//sanatize Student PINs
+					Student.PIN = 0;
+
+					//if the student is clocked out
+					if (!Student.Status) {
+						//find the last clock out stamp
+						List<Timestamp> Stamps = db.Timestamps.Where(stamp => stamp.StudentId == Student.Id).ToList();
+
+						//prevent error if first stamp
+						if (Stamps.Count > 1) {
+							Student.Timestamp.TimeOut = Stamps[Stamps.Count - 2].TimeOut;
+						}
+					}
 				}
 			}
 
+			//return Class JSON
 			return new JSONResponse() {
 				Action = "Listing Active Classes",
 				Data = Classes,
@@ -69,9 +86,31 @@ namespace MAXClockAPI.Controllers
 		[HttpGet]
 		[ActionName("InActive")]
 		public JSONResponse InActiveClasses() {
+			List<Class> Classes = db.Classes.Where(cls => cls.Active == false).ToList();
+			//add previous data to the JSON for initial stamp
+			foreach (Class Class in Classes) {
+				foreach (Student Student in Class.Students) {
+					//sanatize Student PINs
+					Student.PIN = 0;
 
+					//if the student is clocked out
+					if (!Student.Status) {
+						//find the last clock out stamp
+						List<Timestamp> Stamps = db.Timestamps.Where(stamp => stamp.StudentId == Student.Id).ToList();
+
+						//prevent error if first stamp
+						if (Stamps.Count > 1) {
+							Student.Timestamp.TimeOut = Stamps[Stamps.Count - 2].TimeOut;
+						}
+					}
+				}
+			}
+
+			//return Class JSON
 			return new JSONResponse() {
-				Data = db.Classes.Where(cls => cls.Active == false ).ToList()
+				Action = "Listing Active Classes",
+				Data = Classes,
+				Error = "N/A"
 			};
 		}
 
@@ -83,16 +122,16 @@ namespace MAXClockAPI.Controllers
 			Class @class = db.Classes.Find(id);
 			if (@class == null) {
 				return new JSONResponse() {
-					Action = "Get Class",
+					Action = "Getting Class",
 					Data = null,
 					Error = "Class Not Found"
 				};
 			}
 
 			return new JSONResponse() {
-				Action = "",
+				Action = "Getting Class",
 				Data = @class,
-				Error = ""
+				Error = "N/A"
 			};
 		}
 
@@ -105,10 +144,10 @@ namespace MAXClockAPI.Controllers
 
 		[HttpPost]
 		[ActionName("AddStudent")]
-		public JSONResponse AddStudent(StudentClasses studentclasses) {
+		public JSONResponse AddStudent(Student student) {
 
-			Class @Class = db.Classes.Find(studentclasses.ClassId);
-			Student Student = db.Students.Find(studentclasses.StudentId);
+			Class @Class = db.Classes.Find(student.Timestamp.ClassId);
+			Student Student = db.Students.Find(student.Id);
 
 			@Class.Students.Add(Student);
 			db.Entry(@Class).State = EntityState.Modified;

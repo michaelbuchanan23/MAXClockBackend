@@ -85,11 +85,27 @@ namespace MAXClockAPI.Controllers
 				Lastname = student.Lastname,
 				PIN = student.PIN,
 				Status = false,
-				Timestamp = new Timestamp()
+				Timestamp = new Timestamp() { }
 			};
 
 			//add Student to DB
 			db.Entry(Student).State = EntityState.Added;
+			db.SaveChanges();
+
+			//set Timestamp StudentId
+			Student.Timestamp.StudentId = Student.Id;
+
+			//create new Timestamp for Student
+			db.Entry(Student.Timestamp).State = EntityState.Added;
+			db.SaveChanges();
+
+			//retrieve new Timestamp
+			Timestamp Stamp = db.Timestamps.Where(stamp => stamp.StudentId == Student.Id).First();
+			Student.Timestamp = Stamp;
+
+			//modify Student Timestamp Id DB
+			db.Entry(Student).State = EntityState.Modified;
+			db.SaveChanges();
 
 			//sanitize Student PIN
 			Student.PIN = 0;
@@ -123,18 +139,21 @@ namespace MAXClockAPI.Controllers
 
 		[HttpPost]
 		[ActionName("Stamp")]
-		public JSONResponse Stamp(Timestamp timestamp) {
+		public JSONResponse Stamp(Student student) {
 
+			Timestamp timestamp = student.Timestamp;
 			//get Student
-			Student Student = db.Students.Find(timestamp.StudentId);
+			Student Student = db.Students.Find(student.Id);
 
-			if (timestamp.PIN != Student.PIN) {
+			//check PIN
+			if (student.PIN != Student.PIN) {
 				return new JSONResponse() {
 					Action = "Failed to Stamp",
 					Data = null,
 					Error = $"Incorrect PIN"
 				};
 			}
+
 			//get current Timestamp
 			Timestamp Stamp = Student.Timestamp;
 
